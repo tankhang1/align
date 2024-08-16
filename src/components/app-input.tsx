@@ -18,6 +18,7 @@ type TAppInput = {
     value: string,
     isOther?: boolean
   ) => void;
+  setOtherValue?: (value: string) => void;
 };
 
 const AppInput = ({
@@ -31,6 +32,7 @@ const AppInput = ({
   link,
   onChangeText,
   isText = true,
+  setOtherValue,
 }: TAppInput) => {
   const [rating, setRating] = useState(0);
   const [isOtherClick, setIsOtherClick] = useState(false);
@@ -53,7 +55,8 @@ const AppInput = ({
   return (
     <div className="flex flex-col gap-2 mb-2 w-full flex-wrap bg-white px-4 py-5 rounded-lg border shadow-sm">
       <span className={`text-base ${isBold ? "font-semibold" : "font-normal"}`}>
-        {index}. {title}{" "}
+        {isText && index + ". "}
+        {title}{" "}
         {link && (
           <span
             className="text-blue-600 cursor-pointer"
@@ -86,6 +89,7 @@ const AppInput = ({
                       className="mr-2"
                       onClick={(e) => {
                         setIsOtherClick(e.currentTarget.checked);
+                        setOtherValue?.("");
                       }}
                     />
                     <label
@@ -98,9 +102,7 @@ const AppInput = ({
                           type={type}
                           className="input !text-base"
                           placeholder={"Nhập thông tin khác"}
-                          onChange={(e) =>
-                            onChangeText(index, type, e.target.value, true)
-                          }
+                          onChange={(e) => setOtherValue?.(e.target.value)}
                           autoFocus
                         />
                       ) : (
@@ -119,7 +121,6 @@ const AppInput = ({
                     onClick={(e) => {
                       onChangeText(index, type, answer);
                     }}
-                    disabled={isOtherClick}
                   />
                   <label
                     htmlFor={`answer-${answerIndex}`}

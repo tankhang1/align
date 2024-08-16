@@ -63,8 +63,11 @@ const QUESTIONS: TQuestion[] = [
     type: "group",
     answers: [
       "Invisalign",
-      "Clear Correct, Angel Aligner, Smartee, Zenyum...",
-      "Khay in-house",
+      "Angel Aligner",
+      "Clear Correct",
+      "Smartee",
+      "Zenyum",
+      "Khay-in-house",
       "Other",
     ],
   },
@@ -115,6 +118,7 @@ const QuestionPage: React.FunctionComponent = () => {
   const [token, setToken] = useRecoilState(tokenState);
   const [openCancelGetInfo, setOpenCancelGetInfo] = useState(false);
   const [openRuleModal, setOpenRuleModal] = useState(false);
+  const [otherValue, setOtherValue] = useState("");
   const [answer, setAnswer] = useState<TForm>({
     result1: "",
     result2: "",
@@ -130,20 +134,15 @@ const QuestionPage: React.FunctionComponent = () => {
   const onChangeText = (
     questionIndex: number,
     type: React.HTMLInputTypeAttribute | "group" | "rating",
-    value: string,
-    isOther?: boolean
+    value: string
   ) => {
     let tmp = answer;
-    if (
-      type === "group" &&
-      answer[`result${questionIndex}`].length > 0 &&
-      !isOther
-    ) {
+    if (type === "group") {
       if (answer[`result${questionIndex}`].includes(value)) {
         const listResult = answer[`result${questionIndex}`]
-          .split("-")
+          .split(",")
           .filter((item) => item !== value)
-          .join("-");
+          .join(",");
         tmp = {
           ...tmp,
           [`result${questionIndex}`]: listResult,
@@ -152,7 +151,7 @@ const QuestionPage: React.FunctionComponent = () => {
         tmp = {
           ...tmp,
           [`result${questionIndex}`]:
-            answer[`result${questionIndex}`] + "-" + value,
+            answer[`result${questionIndex}`] + "," + value,
         };
       }
     } else {
@@ -180,7 +179,11 @@ const QuestionPage: React.FunctionComponent = () => {
       }
     });
     if (flag === 0) return;
-    await submitSurveyForm(token, answer)
+    const tmp = answer;
+    await submitSurveyForm(token, {
+      ...tmp,
+      result6: answer.result6 + "," + otherValue,
+    })
       .then((value) => {
         setIsLoading(false);
         if (value.status === -1) {
@@ -198,11 +201,11 @@ const QuestionPage: React.FunctionComponent = () => {
         }
       })
       .catch(async (e) => {
+        setIsLoading(false);
         setOpenTokenError(true);
         await refreshToken(token).then((value) => {
           setToken(value.data);
         });
-        setIsLoading(false);
       });
   };
   const onSubmit = () => {
@@ -212,6 +215,7 @@ const QuestionPage: React.FunctionComponent = () => {
   };
   const onCancel = () => {
     setOpenRuleModal(false);
+
     setIsLoading(true);
     onValidateForm("cancel");
   };
@@ -305,6 +309,7 @@ const QuestionPage: React.FunctionComponent = () => {
             link={question.link}
             onChangeText={onChangeText}
             isText={question.isText}
+            setOtherValue={setOtherValue}
           />
         ))}
         <Button
@@ -316,7 +321,7 @@ const QuestionPage: React.FunctionComponent = () => {
         </Button>
       </div>
       <Modal
-        visible={true}
+        visible={openRuleModal}
         onClose={() => {
           setOpenRuleModal(false);
         }}

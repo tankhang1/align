@@ -1,23 +1,10 @@
 import checkDeviceId from "apis/checkDeviceId";
 import getToken from "apis/getToken";
-import updateZaloInfo from "apis/updateZaloInfo";
-import React, { Suspense, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { deviceState, tokenState } from "state";
-import { TZaloRecord } from "types";
-import { FETCHApi } from "utils";
-import {
-  authorize,
-  closeApp,
-  getAccessToken,
-  getDeviceId,
-  getDeviceIdAsync,
-  getLocation,
-  getPhoneNumber,
-  getUserInfo,
-  openWebview,
-} from "zmp-sdk";
-import { List, Page, Icon, useNavigate, Button, Modal } from "zmp-ui";
+import { getDeviceIdAsync } from "zmp-sdk";
+import { Page, useNavigate, Button, Modal } from "zmp-ui";
 
 const HomePage: React.FunctionComponent = () => {
   const navigate = useNavigate();
