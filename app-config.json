@@ -1,0 +1,20 @@
+{
+  "app": {
+    "title": "align-mini-app",
+    "headerTitle": "Align",
+    "headerColor": "#5b4488",
+    "textColor": "white",
+    "textAlign": "left",
+    "statusBarColor": "#5b4488",
+    "leftButton": "back",
+    "statusBar": "normal",
+    "actionBarHidden": false,
+    "hideAndroidBottomNavigationBar": false,
+    "hideIOSSafeAreaBottom": false
+  },
+  "debug": false,
+  "pages": [],
+  "listCSS": [],
+  "listSyncJS": [],
+  "listAsyncJS": []
+}

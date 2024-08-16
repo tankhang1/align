@@ -1,0 +1,27 @@
+
+
+.home-page {
+  padding: 30px 16px;
+  background-image: url('../assets/720x1280.png');
+  background-size: 100% 100%; /* Stretches the image to fill the container */
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex:1
+}
+
+.question-page{
+  background-color: #eaeaf2;
+  display: flex;
+  flex:1;
+  flex-direction: column;
+}
+
+.input{
+  outline: none;
+  border-color: gray; /* Optional: Change the border color when focused */
+  box-shadow: none; /* Optional: Remove shadow if any */
+  line-height: 25px;
+  width: 100%;
+}
