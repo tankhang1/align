@@ -12,6 +12,8 @@ type TAppInput = {
   isBold?: boolean;
   link?: string;
   isText?: boolean;
+  pattern?: RegExp;
+  errorTxt?: string;
   onChangeText: (
     questionIndex: number,
     type: React.HTMLInputTypeAttribute | "group" | "rating",
@@ -28,6 +30,8 @@ const AppInput = ({
   type,
   required,
   answers,
+  errorTxt,
+  pattern,
   isBold = true,
   link,
   onChangeText,
@@ -36,6 +40,7 @@ const AppInput = ({
 }: TAppInput) => {
   const [rating, setRating] = useState(0);
   const [isOtherClick, setIsOtherClick] = useState(false);
+  const [isError, setIsError] = useState(false);
   const onHandleWebview = async () => {
     if (link)
       try {
@@ -150,10 +155,25 @@ const AppInput = ({
             min={0}
             className="input !text-base"
             placeholder={placeholder}
-            onChange={(e) => onChangeText(index, type, e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (pattern) {
+                if (pattern.test(value)) {
+                  setIsError(false);
+                  onChangeText(index, type, value); // Valid email
+                } else {
+                  setIsError(true);
+                  onChangeText(index, type, value); // Valid email
+                }
+              } else {
+                setIsError(false);
+                onChangeText(index, type, value);
+              }
+            }}
           />
         ) : null}
       </div>
+      {isError && <p style={{ color: "red", fontSize: 13 }}>{errorTxt}</p>}
     </div>
   );
 };

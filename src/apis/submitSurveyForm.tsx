@@ -6,6 +6,7 @@ type TSubmitFormRES = {
   data: number;
   status: number;
   message: string;
+  code: string;
 };
 const submitSurveyForm = async (
   bearerToken: string,

@@ -48,15 +48,15 @@ const HomePage: React.FunctionComponent = () => {
   return (
     <Page className="home-page">
       <div className="flex flex-col justify-center items-start h-full">
-        <h3 className="text-white text-5xl font-bold">Event Survey</h3>
+        <h3 className="text-white text-5xl font-bold">Mẫu thông tin</h3>
         <div className="h-6" />
         <div className="h-6" />
-        <p className="text-white text-sm">
+        {/* <p className="text-white text-sm">
           Cảm ơn quý BS đã tham dự sự kiện hôm nay. Hi vọng bác sĩ đã có những
           trải nghiệm và thông tin hữu ích để phục vụ cho chuyên môn và thực
           hành. Chúng tôi mong muốn lắng nghe phản hồi của bác sĩ để có thể hỗ
           trợ tốt hơn. Xin vui lòng hoàn thành phiếu khảo sát sau đây.
-        </p>
+        </p> */}
         <div className="h-6" />
       </div>
       <Button
@@ -64,7 +64,7 @@ const HomePage: React.FunctionComponent = () => {
         onClick={onCheckDeviceId}
         loading={isLoading}
       >
-        Tham gia ngay
+        Bắt đầu
       </Button>
 
       <Modal

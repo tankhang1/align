@@ -24,44 +24,49 @@ type TQuestion = {
   isBold?: boolean;
   link?: string;
   isText?: boolean;
+  pattern?: RegExp;
+  errorTxt?: string;
 };
 const QUESTIONS: TQuestion[] = [
   {
-    placeholder: "Nhập họ và tên bác sĩ",
-    questionName: "Họ và Tên bác sĩ",
+    questionName: "Tên bác sĩ và địa chỉ nha khoa",
+    placeholder: "VD: Bác sĩ A, trưởng khoa bệnh viện Ung Bứu",
     required: true,
     type: "text",
   },
   {
-    placeholder: "Nhập số điện thoại",
+    placeholder: "VD: 03568556xx",
     questionName: "Số điện thoại",
     required: true,
     type: "tel",
   },
   {
-    placeholder: "Nhập số email",
+    placeholder: "VD: dk@gmail.com",
     questionName: "Email",
     required: true,
     type: "email",
+    pattern: /^[^s@]+@[^s@]+.[^s@]+$/,
+    errorTxt: "Sai định dạng email",
   },
-  {
-    placeholder: "Nhập thông tin Nha Khoa (Tên & Địa chỉ)",
-    questionName: "Thông tin Nha Khoa (Tên & Địa chỉ)",
-    required: true,
-    type: "email",
-  },
-  {
-    placeholder: "Nhập số lượng bệnh nhân",
-    questionName:
-      "Số lượng bệnh nhân điều trị chỉnh nha tại Nha khoa trong 1 năm",
-    required: true,
-    type: "number",
-  },
+  // {
+  //   placeholder: "Nhập thông tin Nha Khoa (Tên & Địa chỉ)",
+  //   questionName: "Thông tin Nha Khoa (Tên & Địa chỉ)",
+  //   required: true,
+  //   type: "text",
+  // },
+  // {
+  //   placeholder: "Nhập số lượng bệnh nhân",
+  //   questionName:
+  //     "Số lượng bệnh nhân điều trị chỉnh nha tại Nha khoa trong 1 năm",
+  //   required: true,
+  //   type: "number",
+  // },
   {
     questionName: "Sản phẩm bác sĩ hiện đang dùng trong chỉnh nha",
     required: false,
     type: "group",
     answers: [
+      "Mắc cài kim loại",
       "Invisalign",
       "Angel Aligner",
       "Clear Correct",
@@ -83,17 +88,17 @@ const QUESTIONS: TQuestion[] = [
     required: true,
     type: "rating",
   },
-  {
-    questionName: `Bằng việc bấm nút "Submit" , bác sĩ đồng ý với việc thu thập thông tin và xử lý dữ liệu cá nhân bởi Align Technology Inc. cũng như tất cả công ty liên kết và công ty con (“Align”) cho mục đích nhận thông tin và thông báo về sản phẩm của Align (Invisalign, iTero, Vivera, Exocad). 
-Bác sĩ theo đây cũng đồng ý rằng Bác sĩ sẽ được Align hoặc một đại diện được Align ủy quyền liên hệ thông qua email, điện thoại hoặc các hình thức liên lạc khác cho mục đích này. 
-Dữ liệu cá nhân của bác sĩ sẽ được xử lý theo Chính sách bảo mật của Align tại`,
-    required: true,
-    type: "text",
-    placeholder: "Nhập thông tin",
-    link: "https://www.invisalign.com.vn/privacy-policy",
-    isBold: false,
-    isText: false,
-  },
+  //   {
+  //     questionName: `Bằng việc bấm nút "Submit" , bác sĩ đồng ý với việc thu thập thông tin và xử lý dữ liệu cá nhân bởi Align Technology Inc. cũng như tất cả công ty liên kết và công ty con (“Align”) cho mục đích nhận thông tin và thông báo về sản phẩm của Align (Invisalign, iTero, Vivera, Exocad).
+  // Bác sĩ theo đây cũng đồng ý rằng Bác sĩ sẽ được Align hoặc một đại diện được Align ủy quyền liên hệ thông qua email, điện thoại hoặc các hình thức liên lạc khác cho mục đích này.
+  // Dữ liệu cá nhân của bác sĩ sẽ được xử lý theo Chính sách bảo mật của Align tại`,
+  //     required: true,
+  //     type: "text",
+  //     placeholder: "Nhập thông tin",
+  //     link: "https://www.invisalign.com.vn/privacy-policy",
+  //     isBold: false,
+  //     isText: false,
+  //   },
 ];
 type TForm = {
   result1: string;
@@ -184,7 +189,7 @@ const QuestionPage: React.FunctionComponent = () => {
       ...tmp,
       result6: answer.result6 + "," + otherValue,
     })
-      .then((value) => {
+      .then(async (value) => {
         setIsLoading(false);
         if (value.status === -1) {
           setOpenSystemError(true);
@@ -199,13 +204,35 @@ const QuestionPage: React.FunctionComponent = () => {
           if (type === "cancel") setOpenCancelGetInfo(true);
           else setOpenSubmitSuccess(true);
         }
+        if (value.code === "ERR_BAD_REQUEST") {
+          setIsLoading(true);
+          await refreshToken(token).then(async (value) => {
+            await submitSurveyForm(value.data, {
+              ...tmp,
+              result6: answer.result6 + "," + otherValue,
+            })
+              .then(async (value) => {
+                setIsLoading(false);
+                if (value.status === -1) {
+                  setOpenSystemError(true);
+                }
+                if (value.status === -2) {
+                  setOpenFormError(true);
+                }
+                if (value.status === -3) {
+                  setOpenSubmitError(true);
+                }
+                if (value.status === 0) {
+                  if (type === "cancel") setOpenCancelGetInfo(true);
+                  else setOpenSubmitSuccess(true);
+                }
+              })
+              .catch(() => setIsLoading(false));
+          });
+        }
       })
       .catch(async (e) => {
         setIsLoading(false);
-        setOpenTokenError(true);
-        await refreshToken(token).then((value) => {
-          setToken(value.data);
-        });
       });
   };
   const onSubmit = () => {
@@ -307,6 +334,8 @@ const QuestionPage: React.FunctionComponent = () => {
             answers={question.answers}
             isBold={question.isBold}
             link={question.link}
+            errorTxt={question?.errorTxt}
+            pattern={question.pattern}
             onChangeText={onChangeText}
             isText={question.isText}
             setOtherValue={setOtherValue}
@@ -330,13 +359,13 @@ const QuestionPage: React.FunctionComponent = () => {
         }}
       >
         <div className="bg-white py-1 rounded-lg max-w-xl mx-auto">
-          <h3 className="text-2xl font-bold text-gray-800 mb-4">
+          {/* <h3 className="text-2xl font-bold text-gray-800 mb-4">
             Khảo sát Align
           </h3>
           <p className="mb-4">
             Nhận thông tin, quà tặng và thông báo về sản phẩm của{" "}
             <strong>Align</strong> (Invisalign, iTero, Vivera, Exocad)
-          </p>
+          </p> */}
 
           <span>
             Bác sĩ đồng ý với việc thu thập thông tin và xử lý dữ liệu cá nhân
@@ -382,16 +411,16 @@ const QuestionPage: React.FunctionComponent = () => {
         <div className="bg-white py-1 rounded-lg flex flex-col justify-center items-center">
           <img src={Gift} className=" h-44 " />
           <p className="text-2xl mb-4 text-[#4caf50]">
-            🎉 Chúc mừng! Bạn đã hoàn thành khảo sát! 🎉
+            🎉 Chúc mừng! Bác sĩ đã hoàn thành khảo sát! 🎉
           </p>
           <p className="text-lg ">
-            Cảm ơn bạn đã dành thời gian quý báu để chia sẻ ý kiến của mình.
-            Phản hồi của bạn rất có giá trị và sẽ giúp chúng tôi cải thiện sản
-            phẩm/dịch vụ tốt hơn trong tương lai.
+            Cảm ơn bác sĩ đã dành thời gian quý báu để chia sẻ thông tin của
+            mình. Phản hồi của bác sĩ rất có giá trị và sẽ giúp chúng tôi cải
+            thiện sản phẩm/dịch vụ tốt hơn trong tương lai.
           </p>
           <span className="font-bold text-sm mb-6">
-            <span className="text-red-600">* </span>Vui lòng giữ màn hình trúng
-            thưởng và gửi cho nhân viên hỗ trợ để nhận quà.
+            <span className="text-red-600">* </span>Vui lòng giữ màn hình này và
+            gửi cho nhân viên hỗ trợ để nhận quà.
           </span>
           <Button
             className="!text-white !bg-blue-400 !rounded-xl w-full !h-14 !text-base"

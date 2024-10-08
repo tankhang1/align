@@ -38,7 +38,7 @@ export const FETCHApi = <H, P, D>(
       })
       .catch((err) => {
         console.log(`>>>>${path} - ${method}>>>> [error]`, { err });
-        reject(err);
+        resolve(err);
       })
   );
 };
