@@ -10,3 +10,7 @@ export const deviceState = atom({
   key: "deviceState",
   default: "",
 });
+export const surveyLocationUuid = atom({
+  key: "surveyState",
+  default: "",
+});

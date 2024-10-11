@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Page, Button, Modal } from "zmp-ui";
 import Gift from "../../assets/QUA TANG.jpg";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { deviceState, tokenState } from "state";
+import { deviceState, surveyLocationUuid, tokenState } from "state";
 import submitSurveyForm from "apis/submitSurveyForm";
 import refreshToken from "apis/refreshToken";
 import {
@@ -48,19 +48,7 @@ const QUESTIONS: TQuestion[] = [
     pattern: /^[^s@]+@[^s@]+.[^s@]+$/,
     errorTxt: "Sai định dạng email",
   },
-  // {
-  //   placeholder: "Nhập thông tin Nha Khoa (Tên & Địa chỉ)",
-  //   questionName: "Thông tin Nha Khoa (Tên & Địa chỉ)",
-  //   required: true,
-  //   type: "text",
-  // },
-  // {
-  //   placeholder: "Nhập số lượng bệnh nhân",
-  //   questionName:
-  //     "Số lượng bệnh nhân điều trị chỉnh nha tại Nha khoa trong 1 năm",
-  //   required: true,
-  //   type: "number",
-  // },
+
   {
     questionName: "Sản phẩm bác sĩ hiện đang dùng trong chỉnh nha",
     required: false,
@@ -88,17 +76,6 @@ const QUESTIONS: TQuestion[] = [
     required: true,
     type: "rating",
   },
-  //   {
-  //     questionName: `Bằng việc bấm nút "Submit" , bác sĩ đồng ý với việc thu thập thông tin và xử lý dữ liệu cá nhân bởi Align Technology Inc. cũng như tất cả công ty liên kết và công ty con (“Align”) cho mục đích nhận thông tin và thông báo về sản phẩm của Align (Invisalign, iTero, Vivera, Exocad).
-  // Bác sĩ theo đây cũng đồng ý rằng Bác sĩ sẽ được Align hoặc một đại diện được Align ủy quyền liên hệ thông qua email, điện thoại hoặc các hình thức liên lạc khác cho mục đích này.
-  // Dữ liệu cá nhân của bác sĩ sẽ được xử lý theo Chính sách bảo mật của Align tại`,
-  //     required: true,
-  //     type: "text",
-  //     placeholder: "Nhập thông tin",
-  //     link: "https://www.invisalign.com.vn/privacy-policy",
-  //     isBold: false,
-  //     isText: false,
-  //   },
 ];
 type TForm = {
   result1: string;
@@ -107,10 +84,8 @@ type TForm = {
   result4: string;
   result5: string;
   result6: string;
-  result7: string;
-  result8: string;
-  result9: string;
   zalo_device_id: string;
+  survey_location_uuid: string;
 };
 const QuestionPage: React.FunctionComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -121,6 +96,7 @@ const QuestionPage: React.FunctionComponent = () => {
   const [openTokenError, setOpenTokenError] = useState(false);
   const deviceId = useRecoilValue(deviceState);
   const [token, setToken] = useRecoilState(tokenState);
+  const surveyUUID = useRecoilValue(surveyLocationUuid);
   const [openCancelGetInfo, setOpenCancelGetInfo] = useState(false);
   const [openRuleModal, setOpenRuleModal] = useState(false);
   const [otherValue, setOtherValue] = useState("");
@@ -131,10 +107,9 @@ const QuestionPage: React.FunctionComponent = () => {
     result4: "",
     result5: "",
     result6: "",
-    result7: "",
-    result8: "",
-    result9: "Submit",
+
     zalo_device_id: deviceId,
+    survey_location_uuid: surveyUUID,
   });
   const onChangeText = (
     questionIndex: number,
@@ -174,6 +149,7 @@ const QuestionPage: React.FunctionComponent = () => {
     Object.keys(answer).forEach((item, index) => {
       if (
         item !== "zalo_device_id" &&
+        item !== "survey_location_uuid" &&
         QUESTIONS[index].required &&
         answer[item] === ""
       ) {
@@ -187,7 +163,7 @@ const QuestionPage: React.FunctionComponent = () => {
     const tmp = answer;
     await submitSurveyForm(token, {
       ...tmp,
-      result6: answer.result6 + "," + otherValue,
+      result4: answer.result4 + "," + otherValue,
     })
       .then(async (value) => {
         setIsLoading(false);
@@ -209,7 +185,7 @@ const QuestionPage: React.FunctionComponent = () => {
           await refreshToken(token).then(async (value) => {
             await submitSurveyForm(value.data, {
               ...tmp,
-              result6: answer.result6 + "," + otherValue,
+              result4: answer.result4 + "," + otherValue,
             })
               .then(async (value) => {
                 setIsLoading(false);

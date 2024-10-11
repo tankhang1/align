@@ -1,8 +1,8 @@
 import checkDeviceId from "apis/checkDeviceId";
 import getToken from "apis/getToken";
 import React, { useCallback, useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
-import { deviceState, tokenState } from "state";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { deviceState, surveyLocationUuid, tokenState } from "state";
 import { getDeviceIdAsync } from "zmp-sdk";
 import { Page, useNavigate, Button, Modal } from "zmp-ui";
 
@@ -10,6 +10,8 @@ const HomePage: React.FunctionComponent = () => {
   const navigate = useNavigate();
   const [tokenValue, setTokenValue] = useRecoilState(tokenState);
   const [deviceId, setDeviceId] = useRecoilState(deviceState);
+  const setSurveyLocationUUID = useSetRecoilState(surveyLocationUuid);
+
   const [isLoading, setIsLoading] = useState(false);
   const [openIsExistDeviceId, setIsExistDeviceId] = useState(false);
   const onNavQuestionScreen = () => {
@@ -40,10 +42,17 @@ const HomePage: React.FunctionComponent = () => {
       }
     });
   };
+  const getParams = async () => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const survey_location_uuid = urlParams.get("survey_location_uuid");
+    setSurveyLocationUUID(survey_location_uuid ?? "");
+  };
 
   useEffect(() => {
     JWT_Token();
     getDeviceId();
+    getParams();
   }, []);
   return (
     <Page className="home-page">
