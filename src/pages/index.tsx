@@ -88,10 +88,10 @@ const HomePage: React.FunctionComponent = () => {
         <div className="bg-white py-1 rounded-lg flex flex-col justify-center items-start">
           <h2 className="text-lg mb-4 text-black font-bold">Thông báo:</h2>
           <p className="text-base ">
-            Bạn đã hoàn thành bài khảo sát này. Vui lòng quay lại khi có bài
+            Bác sĩ đã hoàn thành bài khảo sát này. Vui lòng quay lại khi có bài
             khảo sát mới.
           </p>
-          <p className="text-base ">Cảm ơn sự hợp tác của bạn!</p>
+          <p className="text-base ">Cảm ơn sự hợp tác của bác sĩ!</p>
         </div>
       </Modal>
     </Page>

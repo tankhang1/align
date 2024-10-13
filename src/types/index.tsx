@@ -16,9 +16,6 @@ export type TFormSubmit = {
   result4: string;
   result5: string;
   result6: string;
-  result7: string;
-  result8: string;
-  result9: string;
   zalo_device_id: string;
   survey_location_uuid: string;
 };

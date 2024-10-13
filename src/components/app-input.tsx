@@ -142,6 +142,7 @@ const AppInput = ({
             <Rating
               style={{ maxWidth: 200 }}
               value={rating}
+              items={4}
               onChange={(value: number) => {
                 setRating(value);
                 onChangeText(index, type, value.toString());

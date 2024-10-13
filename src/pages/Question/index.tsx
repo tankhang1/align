@@ -107,7 +107,6 @@ const QuestionPage: React.FunctionComponent = () => {
     result4: "",
     result5: "",
     result6: "",
-
     zalo_device_id: deviceId,
     survey_location_uuid: surveyUUID,
   });
@@ -295,9 +294,9 @@ const QuestionPage: React.FunctionComponent = () => {
   };
   return (
     <Page className="question-page">
-      <div className="text-2xl bg-[#595a9a] text-white py-4 px-5">
+      {/* <div className="text-2xl bg-[#595a9a] text-white py-4 px-5">
         Sự kiện khảo sát
-      </div>
+      </div> */}
       <div className="overflow-y-auto h-fit p-5">
         {QUESTIONS.map((question, questionIndex) => (
           <AppInput
@@ -420,10 +419,10 @@ const QuestionPage: React.FunctionComponent = () => {
             Lỗi: Đã Nộp Quá Số Lần Cho Phép
           </h2>
           <p className="text-base ">
-            Chúng tôi xin thông báo rằng bạn đã nộp khảo sát này quá một lần.
+            Chúng tôi xin thông báo rằng bác sĩ đã nộp khảo sát này quá một lần.
             Mỗi người chỉ được phép nộp khảo sát một lần duy nhất.
           </p>
-          <p className="text-base ">Cảm ơn bạn đã hiểu và hợp tác! </p>
+          <p className="text-base ">Cảm ơn bác sĩ đã hiểu và hợp tác! </p>
         </div>
       </Modal>
       <Modal
@@ -444,7 +443,7 @@ const QuestionPage: React.FunctionComponent = () => {
             đầy đủ trong khảo sát. Vui lòng kiểm tra lại và hoàn tất các mục bắt
             buộc trước khi gửi.
           </p>
-          <p className="text-base ">Cảm ơn bạn đã hiểu và hợp tác! </p>
+          <p className="text-base ">Cảm ơn bác sĩ đã hiểu và hợp tác! </p>
         </div>
       </Modal>
       <Modal
@@ -460,11 +459,11 @@ const QuestionPage: React.FunctionComponent = () => {
           <h2 className="text-lg mb-4 text-black font-bold">Lỗi Hệ Thống</h2>
           <p className="text-base ">
             Rất tiếc, chúng tôi gặp sự cố kỹ thuật trong quá trình xử lý yêu cầu
-            của bạn. Vui lòng thử lại sau hoặc liên hệ với chúng tôi nếu vấn đề
-            vẫn tiếp diễn.
+            của bác sĩ. Vui lòng thử lại sau hoặc liên hệ với chúng tôi nếu vấn
+            đề vẫn tiếp diễn.
           </p>
           <p className="text-base ">
-            Chúng tôi xin lỗi về sự bất tiện này và cảm ơn bạn đã kiên nhẫn.
+            Chúng tôi xin lỗi về sự bất tiện này và cảm ơn bác sĩ đã kiên nhẫn.
           </p>
         </div>
       </Modal>
@@ -480,9 +479,9 @@ const QuestionPage: React.FunctionComponent = () => {
         <div className="bg-white py-1 rounded-lg flex flex-col justify-center items-start">
           <h2 className="text-lg mb-4 text-black font-bold">Thông báo:</h2>
           <p className="text-base ">
-            Cảm ơn bạn đã tham gia chương trình khảo sát của chúng tôi!
+            Cảm ơn bác sĩ đã tham gia chương trình khảo sát của chúng tôi!
           </p>
-          <p className="text-base ">Cảm ơn sự hợp tác của bạn!</p>
+          <p className="text-base ">Cảm ơn sự hợp tác của bác sĩ!</p>
         </div>
       </Modal>
       <Modal
@@ -499,11 +498,11 @@ const QuestionPage: React.FunctionComponent = () => {
             Phiên Hoạt Động Hết Hạn
           </h2>
           <p className="text-base ">
-            Phiên hoạt động của bạn đã hết hạn. Để đảm bảo rằng tất cả thông tin
-            của bạn được lưu trữ đúng cách, vui lòng nộp kết quả thêm một lần
-            nữa.
+            Phiên hoạt động của bác sĩ đã hết hạn. Để đảm bảo rằng tất cả thông
+            tin của bác sĩ được lưu trữ đúng cách, vui lòng nộp kết quả thêm một
+            lần nữa.
           </p>
-          <p className="text-base ">Cảm ơn sự hợp tác của bạn!</p>
+          <p className="text-base ">Cảm ơn sự hợp tác của bác sĩ!</p>
         </div>
       </Modal>
     </Page>
