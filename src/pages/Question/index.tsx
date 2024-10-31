@@ -91,6 +91,7 @@ const QuestionPage: React.FunctionComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [openSubmitSuccess, setOpenSubmitSuccess] = useState(false);
   const [openSubmitError, setOpenSubmitError] = useState(false);
+  const [openSubmitPhoneError, setOpenSubmitPhoneError] = useState(false);
   const [openFormError, setOpenFormError] = useState(false);
   const [openSystemError, setOpenSystemError] = useState(false);
   const [openTokenError, setOpenTokenError] = useState(false);
@@ -172,8 +173,11 @@ const QuestionPage: React.FunctionComponent = () => {
         if (value.status === -2) {
           setOpenFormError(true);
         }
-        if (value.status === -3) {
+        if (value.status === -4) {
           setOpenSubmitError(true);
+        }
+        if (value.status === -3) {
+          setOpenSubmitPhoneError(true);
         }
         if (value.status === 0) {
           if (type === "cancel") setOpenCancelGetInfo(true);
@@ -194,8 +198,11 @@ const QuestionPage: React.FunctionComponent = () => {
                 if (value.status === -2) {
                   setOpenFormError(true);
                 }
-                if (value.status === -3) {
+                if (value.status === -4) {
                   setOpenSubmitError(true);
+                }
+                if (value.status === -3) {
+                  setOpenSubmitPhoneError(true);
                 }
                 if (value.status === 0) {
                   if (type === "cancel") setOpenCancelGetInfo(true);
@@ -421,6 +428,26 @@ const QuestionPage: React.FunctionComponent = () => {
           <p className="text-base ">
             Chúng tôi xin thông báo rằng bác sĩ đã nộp khảo sát này quá một lần.
             Mỗi người chỉ được phép nộp khảo sát một lần duy nhất.
+          </p>
+          <p className="text-base ">Cảm ơn bác sĩ đã hiểu và hợp tác! </p>
+        </div>
+      </Modal>
+      <Modal
+        visible={openSubmitPhoneError}
+        onClose={() => {
+          setOpenSubmitPhoneError(false);
+        }}
+        modalStyle={{
+          backgroundColor: "white",
+        }}
+      >
+        <div className="bg-white py-1 rounded-lg flex flex-col justify-center items-start">
+          <h2 className="text-lg mb-4 text-black font-bold">
+            Lỗi: Số điện thoại không hợp lệ
+          </h2>
+          <p className="text-base ">
+            Chúng tôi xin thông báo rằng số điện bác sĩ cung cấp không hợp lệ.
+            Vui lòng liên hệ Align để được hỗ trợ.
           </p>
           <p className="text-base ">Cảm ơn bác sĩ đã hiểu và hợp tác! </p>
         </div>
