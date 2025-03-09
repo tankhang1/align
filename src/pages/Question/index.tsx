@@ -35,6 +35,12 @@ const QUESTIONS: TQuestion[] = [
     type: "text",
   },
   {
+    questionName: "Tỉnh thành",
+    placeholder: "VD: Hồ Chí Minh",
+    required: true,
+    type: "select",
+  },
+  {
     placeholder: "VD: 03568556xx",
     questionName: "Số điện thoại",
     required: true,
@@ -84,6 +90,7 @@ type TForm = {
   result4: string;
   result5: string;
   result6: string;
+  result7: string;
   zalo_device_id: string;
   survey_location_uuid: string;
 };
@@ -108,6 +115,7 @@ const QuestionPage: React.FunctionComponent = () => {
     result4: "",
     result5: "",
     result6: "",
+    result7: "",
     zalo_device_id: deviceId,
     survey_location_uuid: surveyUUID,
   });
@@ -384,17 +392,22 @@ const QuestionPage: React.FunctionComponent = () => {
         </div>
       </Modal>
       <Modal
-        visible={openSubmitSuccess}
+        visible={true}
         onClose={() => {}}
         modalStyle={{
           backgroundColor: "white",
         }}
       >
         <div className="bg-white py-1 rounded-lg flex flex-col justify-center items-center">
-          <img src={Gift} className=" h-44 " />
-          <p className="text-2xl mb-4 text-[#4caf50]">
-            🎉 Chúc mừng! Bác sĩ đã hoàn thành khảo sát! 🎉
-          </p>
+          {/* <img src={Gift} className=" h-44 " /> */}
+          <div className="mb-4">
+            <p className="text-2xl text-[#4caf50] text-center">
+              🎉 Chúc mừng!🎉
+            </p>
+            <p className="text-xl text-[#4caf50] text-center">
+              Bác sĩ đã hoàn thành khảo sát!
+            </p>
+          </div>
           <p className="text-lg ">
             Cảm ơn bác sĩ đã dành thời gian quý báu để chia sẻ thông tin của
             mình. Phản hồi của bác sĩ rất có giá trị và sẽ giúp chúng tôi cải
