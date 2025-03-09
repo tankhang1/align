@@ -1,7 +1,7 @@
 import { Rating } from "@smastrom/react-rating";
 import React, { useState } from "react";
 import { openWebview } from "zmp-sdk";
-import { Input, Select } from "zmp-ui";
+import { Box, Input, Select, Sheet } from "zmp-ui";
 
 type TAppInput = {
   index: number;
@@ -105,6 +105,9 @@ const AppInput = ({
   isText = true,
   setOtherValue,
 }: TAppInput) => {
+  const [openSheet, setOpenSheet] = useState(false);
+  const [itemClick, setItemClick] = useState("");
+  const [provinceSearch, setProvinceSearch] = useState("");
   const [rating, setRating] = useState(0);
   const [isOtherClick, setIsOtherClick] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -144,7 +147,6 @@ const AppInput = ({
         className={`${
           type !== "group" &&
           type !== "rating" &&
-          type !== "select" &&
           isText === true &&
           "border-b-[1px] h-10"
         } flex`}
@@ -218,22 +220,16 @@ const AppInput = ({
             />
           </div>
         ) : type === "select" ? (
-          <Select
-            placeholder="VD: Hồ Chí Minh"
-            maskCloseable
-            closeOnSelect
-            onChange={(value) =>
-              onChangeText(index, type, value?.toString() || "")
-            }
-          >
-            {PROVINCES.map((province, index) => (
-              <Option
-                key={index}
-                value={province.value}
-                title={province.label}
-              />
-            ))}
-          </Select>
+          <input
+            key={index}
+            type={type}
+            min={0}
+            className="input !text-base"
+            placeholder={placeholder}
+            onChange={(e) => {}}
+            value={itemClick}
+            onClick={() => setOpenSheet(true)}
+          />
         ) : isText ? (
           <input
             key={index}
@@ -260,6 +256,42 @@ const AppInput = ({
         ) : null}
       </div>
       {isError && <p style={{ color: "red", fontSize: 13 }}>{errorTxt}</p>}
+      <Sheet
+        visible={openSheet}
+        onClose={() => {
+          setOpenSheet(false);
+          setProvinceSearch("");
+        }}
+        autoHeight
+        mask
+        handler
+        swipeToClose
+      >
+        <Box p={4}>
+          <Input
+            placeholder="Tìm kiếm thông tin"
+            defaultValue={provinceSearch}
+            onChange={(e) => setProvinceSearch(e.target.value)}
+          />
+          <Box className="gap-4 flex flex-col overflow-y-auto h-[400px]">
+            {PROVINCES.filter((item) =>
+              item.label.toLowerCase().includes(provinceSearch.toLowerCase())
+            ).map((province) => (
+              <Box
+                onClick={() => {
+                  setItemClick(province.label);
+                  setOpenSheet(false);
+                  onChangeText(index, type, province.label);
+                }}
+                py={3}
+                className="text-sm"
+              >
+                {province.label}
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      </Sheet>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import AppInput from "components/app-input";
 import React, { useState } from "react";
-import { Page, Button, Modal } from "zmp-ui";
+import { Page, Button, Modal, Sheet, Input, Box } from "zmp-ui";
 import Gift from "../../assets/QUA TANG.jpg";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { deviceState, surveyLocationUuid, tokenState } from "state";
@@ -152,6 +152,10 @@ const QuestionPage: React.FunctionComponent = () => {
   };
 
   const onValidateForm = async (type: "cancel" | "submit") => {
+    console.log({
+      ...answer,
+      result5: answer.result5 + "," + otherValue,
+    });
     let flag = -1;
     setIsLoading(true);
     Object.keys(answer).forEach((item, index) => {
@@ -171,7 +175,7 @@ const QuestionPage: React.FunctionComponent = () => {
     const tmp = answer;
     await submitSurveyForm(token, {
       ...tmp,
-      result4: answer.result4 + "," + otherValue,
+      result5: answer.result5 + "," + otherValue,
     })
       .then(async (value) => {
         setIsLoading(false);
@@ -196,7 +200,7 @@ const QuestionPage: React.FunctionComponent = () => {
           await refreshToken(token).then(async (value) => {
             await submitSurveyForm(value.data, {
               ...tmp,
-              result4: answer.result4 + "," + otherValue,
+              result5: answer.result5 + "," + otherValue,
             })
               .then(async (value) => {
                 setIsLoading(false);
