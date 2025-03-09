@@ -392,7 +392,7 @@ const QuestionPage: React.FunctionComponent = () => {
         </div>
       </Modal>
       <Modal
-        visible={true}
+        visible={openSubmitSuccess}
         onClose={() => {}}
         modalStyle={{
           backgroundColor: "white",
