@@ -82,6 +82,12 @@ const QUESTIONS: TQuestion[] = [
     required: true,
     type: "rating",
   },
+  {
+    questionName: "Bác sĩ có muốn đặt lịch thực hành với máy quét iTero không?",
+    required: true,
+    type: "radio",
+    answers: ["Có", "Không"],
+  },
 ];
 type TForm = {
   result1: string;
@@ -91,6 +97,7 @@ type TForm = {
   result5: string;
   result6: string;
   result7: string;
+  result8: string;
   zalo_device_id: string;
   survey_location_uuid: string;
 };
@@ -116,6 +123,7 @@ const QuestionPage: React.FunctionComponent = () => {
     result5: "",
     result6: "",
     result7: "",
+    result8: "",
     zalo_device_id: deviceId,
     survey_location_uuid: surveyUUID,
   });
@@ -173,61 +181,65 @@ const QuestionPage: React.FunctionComponent = () => {
     });
     if (flag === 0) return;
     const tmp = answer;
-    await submitSurveyForm(token, {
+    console.log({
       ...tmp,
       result5: answer.result5 + "," + otherValue,
-    })
-      .then(async (value) => {
-        setIsLoading(false);
-        if (value.status === -1) {
-          setOpenSystemError(true);
-        }
-        if (value.status === -2) {
-          setOpenFormError(true);
-        }
-        if (value.status === -4) {
-          setOpenSubmitError(true);
-        }
-        if (value.status === -3) {
-          setOpenSubmitPhoneError(true);
-        }
-        if (value.status === 0) {
-          if (type === "cancel") setOpenCancelGetInfo(true);
-          else setOpenSubmitSuccess(true);
-        }
-        if (value.code === "ERR_BAD_REQUEST") {
-          setIsLoading(true);
-          await refreshToken(token).then(async (value) => {
-            await submitSurveyForm(value.data, {
-              ...tmp,
-              result5: answer.result5 + "," + otherValue,
-            })
-              .then(async (value) => {
-                setIsLoading(false);
-                if (value.status === -1) {
-                  setOpenSystemError(true);
-                }
-                if (value.status === -2) {
-                  setOpenFormError(true);
-                }
-                if (value.status === -4) {
-                  setOpenSubmitError(true);
-                }
-                if (value.status === -3) {
-                  setOpenSubmitPhoneError(true);
-                }
-                if (value.status === 0) {
-                  if (type === "cancel") setOpenCancelGetInfo(true);
-                  else setOpenSubmitSuccess(true);
-                }
-              })
-              .catch(() => setIsLoading(false));
-          });
-        }
-      })
-      .catch(async (e) => {
-        setIsLoading(false);
-      });
+    });
+    // await submitSurveyForm(token, {
+    //   ...tmp,
+    //   result5: answer.result5 + "," + otherValue,
+    // })
+    //   .then(async (value) => {
+    //     setIsLoading(false);
+    //     if (value.status === -1) {
+    //       setOpenSystemError(true);
+    //     }
+    //     if (value.status === -2) {
+    //       setOpenFormError(true);
+    //     }
+    //     if (value.status === -4) {
+    //       setOpenSubmitError(true);
+    //     }
+    //     if (value.status === -3) {
+    //       setOpenSubmitPhoneError(true);
+    //     }
+    //     if (value.status === 0) {
+    //       if (type === "cancel") setOpenCancelGetInfo(true);
+    //       else setOpenSubmitSuccess(true);
+    //     }
+    //     if (value.code === "ERR_BAD_REQUEST") {
+    //       setIsLoading(true);
+    //       await refreshToken(token).then(async (value) => {
+    //         await submitSurveyForm(value.data, {
+    //           ...tmp,
+    //           result5: answer.result5 + "," + otherValue,
+    //         })
+    //           .then(async (value) => {
+    //             setIsLoading(false);
+    //             if (value.status === -1) {
+    //               setOpenSystemError(true);
+    //             }
+    //             if (value.status === -2) {
+    //               setOpenFormError(true);
+    //             }
+    //             if (value.status === -4) {
+    //               setOpenSubmitError(true);
+    //             }
+    //             if (value.status === -3) {
+    //               setOpenSubmitPhoneError(true);
+    //             }
+    //             if (value.status === 0) {
+    //               if (type === "cancel") setOpenCancelGetInfo(true);
+    //               else setOpenSubmitSuccess(true);
+    //             }
+    //           })
+    //           .catch(() => setIsLoading(false));
+    //       });
+    //     }
+    //   })
+    //   .catch(async (e) => {
+    //     setIsLoading(false);
+    //   });
   };
   const onSubmit = () => {
     setOpenRuleModal(false);
