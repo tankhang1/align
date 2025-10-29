@@ -77,16 +77,16 @@ const QUESTIONS: TQuestion[] = [
     placeholder: "Nhập thông tin",
   },
   {
-    questionName:
-      "Mức độ quan tâm của bác sĩ về việc tăng thêm doanh thu từ chỉnh nha bằng khay trong suốt",
-    required: true,
-    type: "rating",
-  },
-  {
     questionName: "Bác sĩ có muốn đặt lịch thực hành với máy quét iTero không?",
     required: true,
     type: "radio",
     answers: ["Có", "Không"],
+  },
+  {
+    questionName:
+      "Mức độ quan tâm của bác sĩ về việc tăng thêm doanh thu từ chỉnh nha bằng khay trong suốt",
+    required: true,
+    type: "rating",
   },
 ];
 type TForm = {
@@ -115,6 +115,7 @@ const QuestionPage: React.FunctionComponent = () => {
   const [openCancelGetInfo, setOpenCancelGetInfo] = useState(false);
   const [openRuleModal, setOpenRuleModal] = useState(false);
   const [otherValue, setOtherValue] = useState("");
+  const [openGroupLink, setOpenGroupLink] = useState(false);
   const [answer, setAnswer] = useState<TForm>({
     result1: "",
     result2: "",
@@ -185,61 +186,66 @@ const QuestionPage: React.FunctionComponent = () => {
       ...tmp,
       result5: answer.result5 + "," + otherValue,
     });
-    // await submitSurveyForm(token, {
-    //   ...tmp,
-    //   result5: answer.result5 + "," + otherValue,
-    // })
-    //   .then(async (value) => {
-    //     setIsLoading(false);
-    //     if (value.status === -1) {
-    //       setOpenSystemError(true);
-    //     }
-    //     if (value.status === -2) {
-    //       setOpenFormError(true);
-    //     }
-    //     if (value.status === -4) {
-    //       setOpenSubmitError(true);
-    //     }
-    //     if (value.status === -3) {
-    //       setOpenSubmitPhoneError(true);
-    //     }
-    //     if (value.status === 0) {
-    //       if (type === "cancel") setOpenCancelGetInfo(true);
-    //       else setOpenSubmitSuccess(true);
-    //     }
-    //     if (value.code === "ERR_BAD_REQUEST") {
-    //       setIsLoading(true);
-    //       await refreshToken(token).then(async (value) => {
-    //         await submitSurveyForm(value.data, {
-    //           ...tmp,
-    //           result5: answer.result5 + "," + otherValue,
-    //         })
-    //           .then(async (value) => {
-    //             setIsLoading(false);
-    //             if (value.status === -1) {
-    //               setOpenSystemError(true);
-    //             }
-    //             if (value.status === -2) {
-    //               setOpenFormError(true);
-    //             }
-    //             if (value.status === -4) {
-    //               setOpenSubmitError(true);
-    //             }
-    //             if (value.status === -3) {
-    //               setOpenSubmitPhoneError(true);
-    //             }
-    //             if (value.status === 0) {
-    //               if (type === "cancel") setOpenCancelGetInfo(true);
-    //               else setOpenSubmitSuccess(true);
-    //             }
-    //           })
-    //           .catch(() => setIsLoading(false));
-    //       });
-    //     }
-    //   })
-    //   .catch(async (e) => {
-    //     setIsLoading(false);
-    //   });
+    await submitSurveyForm(token, {
+      ...tmp,
+      result5: answer.result5 + "," + otherValue,
+    })
+      .then(async (value) => {
+        setIsLoading(false);
+        if (value.status === -1) {
+          setOpenSystemError(true);
+        }
+        if (value.status === -2) {
+          setOpenFormError(true);
+        }
+        if (value.status === -4) {
+          setOpenSubmitError(true);
+        }
+        if (value.status === -3) {
+          setOpenSubmitPhoneError(true);
+        }
+        if (value.status === 0) {
+          if (type === "cancel") setOpenCancelGetInfo(true);
+          else {
+            setOpenSubmitSuccess(true);
+            setTimeout(() => {
+              setOpenGroupLink(true);
+            }, 2000);
+          }
+        }
+        if (value.code === "ERR_BAD_REQUEST") {
+          setIsLoading(true);
+          await refreshToken(token).then(async (value) => {
+            await submitSurveyForm(value.data, {
+              ...tmp,
+              result5: answer.result5 + "," + otherValue,
+            })
+              .then(async (value) => {
+                setIsLoading(false);
+                if (value.status === -1) {
+                  setOpenSystemError(true);
+                }
+                if (value.status === -2) {
+                  setOpenFormError(true);
+                }
+                if (value.status === -4) {
+                  setOpenSubmitError(true);
+                }
+                if (value.status === -3) {
+                  setOpenSubmitPhoneError(true);
+                }
+                if (value.status === 0) {
+                  if (type === "cancel") setOpenCancelGetInfo(true);
+                  else setOpenSubmitSuccess(true);
+                }
+              })
+              .catch(() => setIsLoading(false));
+          });
+        }
+      })
+      .catch(async (e) => {
+        setIsLoading(false);
+      });
   };
   const onSubmit = () => {
     setOpenRuleModal(false);
@@ -559,6 +565,44 @@ const QuestionPage: React.FunctionComponent = () => {
             lần nữa.
           </p>
           <p className="text-base ">Cảm ơn sự hợp tác của bác sĩ!</p>
+        </div>
+      </Modal>
+      <Modal
+        visible={openGroupLink}
+        onClose={() => {
+          setOpenGroupLink(false);
+        }}
+        modalStyle={{
+          backgroundColor: "white",
+        }}
+      >
+        <div className="bg-white py-1 rounded-lg flex flex-col justify-center items-start">
+          <h2 className="text-lg mb-4 text-black font-bold">Tham Gia Nhóm</h2>
+          <p className="text-base ">
+            Nếu Bác sĩ chưa là Invisalign Provider, vui lòng tham gia nhóm Zalo{" "}
+            <a className="text-blue-600 font-bold">"Invisalign Non-Provider"</a>{" "}
+            để cập nhật thêm thông tin.
+          </p>
+
+          <div className="mt-6 flex items-center justify-end w-full gap-3">
+            <button
+              onClick={() => setOpenGroupLink(false)}
+              className="px-4 py-2 rounded-lg border border-gray-300 text-sm text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-300"
+            >
+              Hủy
+            </button>
+            <button
+              onClick={() => {
+                setOpenGroupLink(false);
+                openWebview({
+                  url: "https://zalo.me/g/bombjm652",
+                });
+              }}
+              className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-400"
+            >
+              Tham Gia
+            </button>
+          </div>
         </div>
       </Modal>
     </Page>
